@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+<h1>JavaScript Arrays using Random numbers</h1>
+
+<p>Generate Random Numbers</p>
+
+<p>
+    <label for="nnumbers">How many numbers to generate?</label>
+    <input id="nnumbers" name="nnumbers" type="number">
+    <button onclick="GenNumbers()">Generate the Numbers</button>
+</p>
+
+<p id="rnumbers"></p>
+
+<button onclick="SortNumbers()">Sort the Numbers</button>
+
+<p id="sortednumbers"></p>
+
+<button onclick="ReverseNumbers()">Reverse the Numbers</button>
+
+<p id="reversenumbers"></p>
+
+<script>
+    var Anumbers = []; // Global Array
+
+    function GenNumbers() {
+        var nnumbers, n, j, rnumbers;
+
+        nnumbers = document.getElementById("nnumbers").value;
+
+        // generate numbers;
+        Anumbers = [];
+
+        for (j = 0, rnumbers = ""; j < nnumbers; j++) {
+            n = Math.round((Math.random() * 100) + 1);
+            rnumbers += n + " ";
+            Anumbers.push(n); // add n to the array Anumbers
+        }
+
+        document.getElementById("rnumbers").innerHTML = rnumbers;
+    }
+
+    function SortNumbers() {
+        var rnumbers;
+
+        Anumbers.sort(function (a, b) {
+            return a - b;
+        });
+
+        rnumbers = "";
+
+        for (var i = 0; i < Anumbers.length; i++) {
+            rnumbers += Anumbers[i] + " ";
+        }
+
+        document.getElementById("sortednumbers").innerHTML = rnumbers;
+    }
+
+    function ReverseNumbers() {
+        var rnumbers;
+
+        Anumbers.reverse();
+
+        rnumbers = "";
+
+        for (var i = 0; i < Anumbers.length; i++) {
+            rnumbers += Anumbers[i] + " ";
+        }
+
+        document.getElementById("reversenumbers").innerHTML = rnumbers;
+    }
+</script>
+
+</body>
+
+</html>
