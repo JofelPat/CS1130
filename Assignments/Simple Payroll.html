@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #addForm {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Payroll System</h2>
+        <form id="addForm">
+            <label for="employeeName">Employee Name:</label>
+            <input type="text" id="employeeName" required>
+            <label for="daysWorked">Days Worked:</label>
+            <input type="number" id="daysWorked" required>
+            <label for="dailyRate">Daily Rate:</label>
+            <input type="number" id="dailyRate" required>
+            <label for="deductionAmount">Deduction Amount:</label>
+            <input type="number" id="deductionAmount" required>
+            <button type="button" onclick="addEmployee()">Add Employee</button>
+        </form>
+        <table id="payrollTable">
+            <tr>
+                <th>No.</th>
+                <th>Employee Name</th>
+                <th>Days Worked</th>
+                <th>Daily Rate</th>
+                <th>Gross Pay</th>
+                <th>Deduction Amount</th>
+                <th>Net Pay</th>
+                <th>Action</th>
+            </tr>
+        </table>
+        <label for="deleteLineNumber">Enter Line Number to Delete:</label>
+        <input type="number" id="deleteLineNumber" required>
+        <button type="button" onclick="deleteEmployee()">Delete Employee</button>
+    </div>
+
+    <script>
+        let payrollList = [];
+
+        function addEmployee() {
+            const employeeName = document.getElementById("employeeName").value;
+            const daysWorked = parseInt(document.getElementById("daysWorked").value);
+            const dailyRate = parseFloat(document.getElementById("dailyRate").value);
+            const deductionAmount = parseFloat(document.getElementById("deductionAmount").value);
+
+            const grossPay = daysWorked * dailyRate;
+            const netPay = grossPay - deductionAmount;
+
+            const payrollEntry = {
+                employeeName,
+                daysWorked,
+                dailyRate,
+                grossPay,
+                deductionAmount,
+                netPay
+            };
+
+            payrollList.push(payrollEntry);
+            displayPayroll();
+            clearForm();
+        }
+
+        function deleteEmployee() {
+            const deleteLineNumber = parseInt(document.getElementById("deleteLineNumber").value);
+
+            if (deleteLineNumber >= 1 && deleteLineNumber <= payrollList.length) {
+                payrollList.splice(deleteLineNumber - 1, 1);
+                displayPayroll();
+                clearForm();
+            } else {
+                alert("Invalid line number. Please enter a valid line number to delete.");
+            }
+        }
+
+        function displayPayroll() {
+            const table = document.getElementById("payrollTable");
+            table.innerHTML = `
+                <tr>
+                    <th>No.</th>
+                    <th>Employee Name</th>
+                    <th>Days Worked</th>
+                    <th>Daily Rate</th>
+                    <th>Gross Pay</th>
+                    <th>Deduction Amount</th>
+                    <th>Net Pay</th>
+                    <th>Action</th>
+                </tr>
+            `;
+
+            for (let i = 0; i < payrollList.length; i++) {
+                const entry = payrollList[i];
+                const row = table.insertRow(-1);
+
+                const cellNo = row.insertCell(0);
+                cellNo.textContent = i + 1;
+
+                const cellName = row.insertCell(1);
+                cellName.textContent = entry.employeeName;
+
+                const cellDays = row.insertCell(2);
+                cellDays.textContent = entry.daysWorked;
+
+                const cellRate = row.insertCell(3);
+                cellRate.textContent = entry.dailyRate;
+
+                const cellGrossPay = row.insertCell(4);
+                cellGrossPay.textContent = entry.grossPay.toFixed(2);
+
+                const cellDeduction = row.insertCell(5);
+                cellDeduction.textContent = entry.deductionAmount.toFixed(2);
+
+                const cellNetPay = row.insertCell(6);
+                cellNetPay.textContent = entry.netPay.toFixed(2);
+
+                const cellAction = row.insertCell(7);
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.addEventListener("click", function() {
+                    deleteEmployeeRow(i + 1);
+                });
+                cellAction.appendChild(deleteButton);
+            }
+        }
+
+        function deleteEmployeeRow(lineNumber) {
+            if (confirm(`Are you sure you want to delete employee at line ${lineNumber}?`)) {
+                payrollList.splice(lineNumber - 1, 1);
+                displayPayroll();
+                clearForm();
+            }
+        }
+
+        function clearForm() {
+            document.getElementById("employeeName").value = "";
+            document.getElementById("daysWorked").value = "";
+            document.getElementById("dailyRate").value = "";
+            document.getElementById("deductionAmount").value = "";
+            document.getElementById("deleteLineNumber").value = "";
+        }
+    </script>
+</body>
+</html>
